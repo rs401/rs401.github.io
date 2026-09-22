@@ -49,7 +49,7 @@ Live as of 2026-09-22. `https://rs401.com` serves the Astro build, deployed by
 - [x] Confirmed live: new build serving, CNAME intact, cert untouched,
       `http://` and `www.` still redirect to `https://rs401.com`
 - [x] Stale CRA output removed from the repo root
-- [ ] Archive the old source repo `rs401/rs401.com`
+- [x] Archive the old source repo `rs401/rs401.com`
 - [ ] Real content (the page is deliberately minimal)
 - [ ] `robots.txt` + `@astrojs/sitemap`
 
