@@ -3,6 +3,15 @@
 # This is the entire deploy path. There is no second repo and no hand-copied
 # build output any more - see README.md for what it replaced.
 #
+# Third-party actions are pinned to a full commit SHA, not a tag: a tag is
+# mutable and can be repointed at different code by whoever owns the action.
+# The trailing comment is the human-readable version that SHA corresponds to.
+#
+# To refresh a pin, resolve the tag to its commit and check it really is one:
+#   git ls-remote https://github.com/actions/<name> refs/tags/<tag> 'refs/tags/<tag>^{}'
+# Use the '^{}' line when there is one (annotated tag); otherwise the single
+# line is already the commit.
+#
 # Ordering note for the one-time switch-over: this workflow cannot deploy until
 # Settings -> Pages -> Source is set to "GitHub Actions". Until then
 # actions/deploy-pages fails, which is harmless - the previously published site
@@ -31,9 +40,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           # Reads .nvmrc, so local and CI can't drift apart.
           node-version-file: .nvmrc
@@ -56,9 +65,9 @@ jobs:
           got=$(cat dist/CNAME)
           test "$got" = "rs401.com" || { echo "::error::dist/CNAME is '$got', expected 'rs401.com'"; exit 1; }
 
-      - uses: actions/configure-pages@v6
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
-      - uses: actions/upload-pages-artifact@v5
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: dist/
 
@@ -70,4 +79,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
