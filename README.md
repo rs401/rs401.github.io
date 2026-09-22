@@ -40,12 +40,29 @@ no longer existed, and the live deploy path was effectively unfindable. Fixed
 
 ## Status
 
+Live as of 2026-09-22. `https://rs401.com` serves the Astro build, deployed by
+`.github/workflows/deploy.yml`.
+
 - [x] Astro skeleton, building locally
-- [ ] GitHub Actions workflow (`configure-pages` → `npm ci && npm run build` →
-      `upload-pages-artifact` with `dist/` → `deploy-pages`)
-- [ ] Settings → Pages → Source = **GitHub Actions** (must be flipped in the web UI)
-- [ ] Confirm `https://rs401.com` serves the new build
-- [ ] Remove the stale CRA output still at the repo root (`index.html`, `static/`,
-      `img/`, `asset-manifest.json`, `manifest.json`, `robots.txt`, `favicon.ico`,
-      `runtime.*.js`, root `CNAME`) — **only after the step above passes**, or the
-      live site goes dark in between
+- [x] GitHub Actions workflow, with actions pinned to commit SHAs
+- [x] Pages `build_type` switched from `legacy` to `workflow`
+- [x] Confirmed live: new build serving, CNAME intact, cert untouched,
+      `http://` and `www.` still redirect to `https://rs401.com`
+- [x] Stale CRA output removed from the repo root
+- [ ] Archive the old source repo `rs401/rs401.com`
+- [ ] Real content (the page is deliberately minimal)
+- [ ] `robots.txt` + `@astrojs/sitemap`
+
+### One trap worth knowing
+
+`actions/deploy-pages` **succeeded and published while `build_type` was still
+`legacy`**, racing the Jekyll builder that the same push kicked off. Ours won
+only because that Jekyll build happened to fail. Had it succeeded it would have
+republished the repo root over the top. If you ever set this up again: flip
+`build_type` to `workflow` as part of the switch-over, don't assume a green
+Actions deploy means the legacy builder is out of the picture.
+
+```sh
+gh api repos/<owner>/<repo>/pages                        # inspect
+gh api -X PUT repos/<owner>/<repo>/pages -f build_type=workflow
+```
