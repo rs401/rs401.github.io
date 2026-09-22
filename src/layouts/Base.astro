@@ -1,0 +1,77 @@
+---
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+// build.format is 'file', so pathname arrives as /index.html or /about.html.
+// Strip that to get the URL visitors actually see: / and /about.
+const canonical = new URL(
+  Astro.url.pathname.replace(/index\.html$/, '').replace(/\.html$/, ''),
+  Astro.site,
+);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+
+    <meta name="color-scheme" content="light dark" />
+  </head>
+  <body>
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #595959;
+    --accent: #0a5ca8;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a;
+      --fg: #e8e8e8;
+      --muted: #a0a4ab;
+      --accent: #7cb6f0;
+    }
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 1rem/1.6 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+
+  main {
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: 4rem 1rem;
+  }
+
+  a {
+    color: var(--accent);
+  }
+</style>

@@ -1,0 +1,6 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "//": "Astro's default include of **/* would sweep in the stale CRA build output still at the repo root (static/, img/); TypeScript OOMs on those minified bundles. Keep this scoped to real source even after step 6 removes them.",
+  "include": [".astro/types.d.ts", "src/**/*", "astro.config.mjs"],
+  "exclude": ["dist", "node_modules", "static", "img"]
+}

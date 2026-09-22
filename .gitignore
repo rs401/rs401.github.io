@@ -1,0 +1,14 @@
+# Astro build output and caches
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# env
+.env
+.env.production
+
+# editors / OS
+.DS_Store
+*.swp
