@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import { person, projects } from '../data/resume';
+---
+
+<Base
+  title={`Projects — ${person.name}`}
+  description="Side and school projects from 2019–2022, kept for the record."
+>
+  <h1>Projects</h1>
+  <p class="muted">
+    Side and school projects from 2019–2022, mostly written while I was finishing my
+    degree. They're archived, not maintained — here for the record.
+  </p>
+
+  {
+    projects.map((project) => (
+      <section class="project">
+        <h2>
+          {project.name} <span class="muted year">{project.year}</span>
+        </h2>
+        <p>{project.description}</p>
+        <p class="muted stack">{project.stack}</p>
+        <p class="links">
+          <a href={project.source}>Source</a>
+          {project.demo && <a href={project.demo}>Demo</a>}
+        </p>
+      </section>
+    ))
+  }
+</Base>
+
+<style>
+  .project h2 {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .year {
+    font-weight: normal;
+    font-size: 0.95rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .project p {
+    margin: 0.5rem 0;
+  }
+
+  .stack {
+    font-size: 0.9rem;
+  }
+
+  .links {
+    display: flex;
+    gap: 1.25rem;
+  }
+</style>

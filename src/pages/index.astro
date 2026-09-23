@@ -1,14 +1,107 @@
 ---
 import Base from '../layouts/Base.astro';
+import { person, work, skills, education } from '../data/resume';
+
+const years = (start: number, end?: number) =>
+  end === undefined ? `${start} – present` : start === end ? `${start}` : `${start} – ${end}`;
 ---
 
 <Base
-  title="Rich Stadnick"
-  description="Rich Stadnick — Senior Software Engineer and Architect at Lake Homes Realty."
+  title={person.name}
+  description={`${person.name} — ${person.role} at ${person.company}. Back end, data pipelines and cloud.`}
 >
-  <h1>Rich Stadnick</h1>
-  <p>Senior Software Engineer and Architect at Lake Homes Realty.</p>
+  <h1>{person.name}</h1>
+  <p class="tagline">{person.tagline}</p>
+  <p class="muted lede">{person.role} at {person.company}</p>
+
   <p>
-    <a href="https://github.com/rs401">GitHub</a>
+    I work on the back end of a group of real estate websites: the pipeline that brings in
+    listing data, the code that serves it, and the cloud infrastructure underneath. Right
+    now I'm co-leading the redesign of that pipeline and helping the other developers on the
+    back end.
   </p>
+  <p>
+    I enjoy learning and investigating bugs. Linux has been the main OS on every machine
+    I've owned since 2004, and these days that's Gentoo. Windows gets a VM with its own
+    passed-through GPU, for games.
+  </p>
+
+  <h2>Work</h2>
+  {
+    work.map((job) => (
+      <section class="job">
+        <h3>{job.company}</h3>
+        {job.summary && <p class="muted">{job.summary}</p>}
+        {job.roles.map((role) => (
+          <div class="role">
+            <p class="role-head">
+              <span>{role.title}</span>
+              <span class="muted">{years(role.start, role.end)}</span>
+            </p>
+            <ul>
+              {role.points.map((point) => (
+                <li>{point}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </section>
+    ))
+  }
+
+  <h2>Tools</h2>
+  <p><strong>Languages:</strong> {skills.languages.join(', ')}</p>
+  <p><strong>Cloud:</strong> AWS</p>
+
+  <h2>Education and certifications</h2>
+  <ul class="plain">
+    {
+      education.map((item) => (
+        <li>
+          {item.url ? <a href={item.url}>{item.name}</a> : item.name}
+          {item.detail && <span class="muted">, {item.detail}</span>}
+          <span class="muted"> · {item.year}</span>
+        </li>
+      ))
+    }
+  </ul>
 </Base>
+
+<style>
+  .tagline {
+    margin: 0 0 0.75rem;
+    font-style: italic;
+  }
+
+  .lede {
+    margin-top: 0;
+    font-size: 1.1rem;
+  }
+
+  .role {
+    margin-top: 1rem;
+  }
+
+  .role-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0 1rem;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .role-head .muted {
+    font-weight: normal;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .role ul {
+    margin-top: 0.5rem;
+  }
+
+  .plain {
+    list-style: none;
+    padding: 0;
+  }
+</style>

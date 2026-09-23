@@ -1,4 +1,6 @@
 ---
+import { person } from '../data/resume';
+
 interface Props {
   title: string;
   description: string;
@@ -7,10 +9,13 @@ interface Props {
 const { title, description } = Astro.props;
 // build.format is 'file', so pathname arrives as /index.html or /about.html.
 // Strip that to get the URL visitors actually see: / and /about.
-const canonical = new URL(
-  Astro.url.pathname.replace(/index\.html$/, '').replace(/\.html$/, ''),
-  Astro.site,
-);
+const path = Astro.url.pathname.replace(/index\.html$/, '').replace(/\.html$/, '');
+const canonical = new URL(path, Astro.site);
+
+const nav = [
+  { href: '/', label: 'About' },
+  { href: '/projects', label: 'Projects' },
+];
 ---
 
 <!doctype html>
@@ -32,9 +37,26 @@ const canonical = new URL(
     <meta name="color-scheme" content="light dark" />
   </head>
   <body>
+    <header>
+      <a class="home" href="/">{person.name}</a>
+      <nav>
+        {
+          nav.map((item) => (
+            <a href={item.href} aria-current={item.href === path ? 'page' : undefined}>
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+    </header>
     <main>
       <slot />
     </main>
+    <footer>
+      <a href={`mailto:${person.links.email}`}>{person.links.email}</a>
+      <a href={person.links.github}>GitHub</a>
+      <a href={person.links.linkedin}>LinkedIn</a>
+    </footer>
   </body>
 </html>
 
@@ -44,6 +66,7 @@ const canonical = new URL(
     --fg: #1a1a1a;
     --muted: #595959;
     --accent: #0a5ca8;
+    --rule: #e2e2e2;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -52,6 +75,7 @@ const canonical = new URL(
       --fg: #e8e8e8;
       --muted: #a0a4ab;
       --accent: #7cb6f0;
+      --rule: #2c3038;
     }
   }
 
@@ -66,13 +90,92 @@ const canonical = new URL(
     font: 1rem/1.6 system-ui, -apple-system, 'Segoe UI', sans-serif;
   }
 
-  main {
+  header,
+  main,
+  footer {
     max-width: 42rem;
     margin: 0 auto;
-    padding: 4rem 1rem;
+    padding: 0 1rem;
+  }
+
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem 1.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+
+  header .home {
+    color: var(--fg);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  nav {
+    display: flex;
+    gap: 1.25rem;
+  }
+
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  nav a[aria-current='page'] {
+    color: var(--fg);
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
+  }
+
+  main {
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+  }
+
+  footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 3rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.9rem;
   }
 
   a {
     color: var(--accent);
+  }
+
+  h1 {
+    font-size: 2rem;
+    line-height: 1.2;
+    margin: 0 0 0.25rem;
+  }
+
+  h2 {
+    font-size: 1.15rem;
+    margin: 3rem 0 1rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  h3 {
+    font-size: 1rem;
+    margin: 1.5rem 0 0.25rem;
+  }
+
+  .muted {
+    color: var(--muted);
+  }
+
+  ul {
+    padding-left: 1.25rem;
+  }
+
+  li + li {
+    margin-top: 0.25rem;
   }
 </style>

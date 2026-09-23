@@ -24,6 +24,13 @@ npm run check    # astro check (types + template diagnostics)
 
 `npm run check` exits non-zero on error, so it is safe to gate CI on.
 
+## Content
+
+Pages render from `src/data/resume.ts`. This repo is public, so everything in that
+file is published whether a page shows it or not. Describe responsibilities, never
+the employer's infrastructure, and never home address or phone numbers. The comment
+at the top of the file has the full rule.
+
 ## Deploy path
 
 **This is the whole deploy path — there is no manual copying step and no second repo.**
@@ -50,7 +57,10 @@ Live as of 2026-09-22. `https://rs401.com` serves the Astro build, deployed by
       `http://` and `www.` still redirect to `https://rs401.com`
 - [x] Stale CRA output removed from the repo root
 - [x] Archive the old source repo `rs401/rs401.com`
-- [ ] Real content (the page is deliberately minimal)
+- [x] Real content: about + work history (`/`), archived projects (`/projects`),
+      rendered from `src/data/resume.ts`
+- [ ] Generate the PDF resume from structured data (the detailed version is kept
+      outside this public repo)
 - [ ] `robots.txt` + `@astrojs/sitemap`
 
 ### One trap worth knowing
